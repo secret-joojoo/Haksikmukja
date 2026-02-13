@@ -1,0 +1,66 @@
+/* 🎨 공통 테마 정의 파일 */
+:root {
+  /* 공통 포인트 컬러 */
+  --accent-color: #ff9f43;
+  --danger-color: #ff5f57;
+  
+  /* 기본: 다크 모드 (Dark) */
+  --bg-color: #222222;
+  --header-bg: #2a2a2a;
+  --panel-bg: #2a2a2a;
+  --item-bg: #333333;
+  --item-hover-bg: #444444;
+  --text-main: #ffffff;
+  --text-sub: #dddddd;
+  --text-empty: #888888; /* 어두운 회색 */
+  --border-color: #444444;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --chip-bg: #333333; /* 칩/버튼용 */
+}
+
+/* ☀️ 라이트 모드 (Light) */
+[data-theme="light"] {
+  --bg-color: #ffffff;
+  --header-bg: #e9ecef;     
+  --panel-bg: #e9ecef;      
+  --item-bg: #dee2e6;
+  --item-hover-bg: #ced4da;
+  --text-main: #000000;
+  --text-sub: #212529;
+  --text-empty: #666666; /* 밝은 회색 (잘 보이게 진하게) */
+  --border-color: #adb5bd;
+  --shadow-color: rgba(0, 0, 0, 0.15);
+  --chip-bg: #e9ecef;
+}
+
+/* 🌙 미드나잇 블루 (Navy) */
+[data-theme="navy"] {
+  --bg-color: #1b263b;
+  --header-bg: #162032;
+  --panel-bg: #162032;
+  --item-bg: #415a77;
+  --item-hover-bg: #536d8e;
+  --text-main: #e0e1dd;
+  --text-sub: #c5c6c2;
+  --text-empty: #82b1ff; /* 연하늘색 */
+  --border-color: #778da9;
+  --accent-color: #4cc9f0;
+  --shadow-color: rgba(0, 0, 0, 0.4);
+  --chip-bg: #415a77;
+}
+
+/* 🌸 러블리 핑크 (Pink) */
+[data-theme="pink"] {
+  --bg-color: #fff0f3;       /* 아주 연한 핑크 배경 (Lavender Blush) */
+  --header-bg: #ffe3e9;      /* 헤더/패널은 살짝 더 진하게 */
+  --panel-bg: #ffe3e9;
+  --item-bg: #ffccd5;        /* 설정 항목/버튼 배경 */
+  --item-hover-bg: #ffb3c1;  /* 마우스 올렸을 때 */
+  --text-main: #000000;      /* 메인 텍스트: 검정색 (가독성 확보) */
+  --text-sub: #590d22;       /* 보조 텍스트: 진한 자주색 */
+  --text-empty: #ff80ab; /* 연분홍색 */
+  --border-color: #ff8fa3;   /* 테두리 색상 */
+  --accent-color: #ff4d6d;   /* 강조 컬러: 쨍한 핑크 */
+  --shadow-color: rgba(164, 19, 60, 0.15); /* 그림자도 붉은 계열로 은은하게 */
+  --chip-bg: #ffccd5;
+}

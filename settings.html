@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;">
+        <title>설정</title>
+        <link rel="stylesheet" href="assets/css/settings.css">
+        <style>
+            body { overflow: hidden; }
+        </style>
+    </head>
+    <body>
+        <div class="title-bar">
+            <span class="settings-title" data-i18n="settingsTitle">설정</span>
+            <div class="close-text-btn" onclick="window.close()">✕</div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="menu-list">
+                <div id="languageGroup">
+                    <button class="setting-item" onclick="toggleLanguagePanel()" data-i18n="langSetting">
+                        언어 설정 (Language)
+                    </button>
+                    <div id="languagePanel" class="control-panel" style="display: none;">
+                        <div class="lang-btn-wrapper" style="display: flex; gap: 10px; width: 100%;">
+                            <button id="btnKo" class="mini-confirm-btn" onclick="changeLanguage('ko')">한국어</button>
+                            <button id="btnEn" class="mini-confirm-btn" onclick="changeLanguage('en')">English</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="fontSizeGroup">
+                    <button class="setting-item" onclick="toggleFontSizePanel()" data-i18n="fontSize">
+                        글자 크기 설정 (Font Size)
+                    </button>
+                    <div id="fontPanel" class="control-panel" style="display: none;">
+                        <div class="lang-btn-wrapper" style="display: flex; gap: 10px; width: 100%;">
+                            <button class="mini-confirm-btn font-btn" onclick="setFontSize('small')" data-val="0.85" data-i18n="fontSmall">소</button>
+                            <button class="mini-confirm-btn font-btn" onclick="setFontSize('medium')" data-val="1" data-i18n="fontMedium">중</button>
+                            <button class="mini-confirm-btn font-btn" onclick="setFontSize('large')" data-val="1.15" data-i18n="fontLarge">대</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="opacityGroup">
+                    <button class="setting-item" onclick="toggleOpacity()" data-i18n="opacity">투명도 조절</button>
+                    <div id="opacityPanel" class="control-panel" style="display: none;">
+                        <div class="range-label">
+                            <span data-i18n="opacityLabel">투명도 조절</span>
+                            <span id="opacityValue" class="percent-text">0%</span>
+                        </div>
+                        <input type="range" id="opacityRange" min="0" max="90" step="1" value="0">
+                    </div>
+                </div>
+
+                <div id="themeGroup">
+                    <button class="setting-item" onclick="toggleThemePanel()" data-i18n="theme">
+                        테마 설정 (Theme)
+                    </button>
+                    <div id="themePanel" class="control-panel" style="display: none;">
+                        <div style="display: flex; gap: 10px; width: 100%;">
+                            <button class="mini-confirm-btn theme-btn" onclick="setTheme('dark')" data-val="dark" data-i18n="themeDark">Dark</button>
+                            <button class="mini-confirm-btn theme-btn" onclick="setTheme('light')" data-val="light" data-i18n="themeLight">Light</button>
+                            <button class="mini-confirm-btn theme-btn" onclick="setTheme('navy')" data-val="navy" data-i18n="themeNavy">Navy</button>
+                            <button class="mini-confirm-btn theme-btn" onclick="setTheme('pink')" data-val="pink" data-i18n="themePink">Pink</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="startupGroup">
+                    <button class="setting-item" onclick="toggleStartupPanel()" data-i18n="startupSetting">
+                        윈도우 시작 시 자동 실행
+                    </button>
+                    <div id="startupPanel" class="control-panel" style="display: none;">
+                        <div style="display: flex; gap: 10px; width: 100%;">
+                            <button id="btnStartupOn" class="mini-confirm-btn startup-btn" onclick="setStartup(true)">O</button>
+                            <button id="btnStartupOff" class="mini-confirm-btn startup-btn" onclick="setStartup(false)">X</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="contactGroup">
+                    <button class="setting-item" onclick="toggleContactPanel()" data-i18n="contact">
+                        고객 문의
+                    </button>
+                    <div id="contactPanel" class="control-panel" style="display: none; flex-direction: column; gap: 10px;">
+                        <div class="custom-select-wrapper">
+                            <div class="custom-select" onclick="toggleCustomSelect()">
+                                <span id="selectedText" style="color: var(--text-sub);" data-i18n="selectTopicPlaceholder">주제를 선택해주세요</span>
+                                <span class="arrow">▼</span>
+                            </div>
+                            
+                            <div id="customOptions" class="custom-options" style="display: none;">
+                                <div class="custom-option" onclick="selectOption('기능 제안', 'topicFeature')" data-i18n="topicFeature">기능 추가 제안</div>
+                                <div class="custom-option" onclick="selectOption('버그 제보', 'topicBug')" data-i18n="topicBug">앱 버그 제보</div>
+                                <div class="custom-option" onclick="selectOption('정보 오류', 'topicError')" data-i18n="topicError">메뉴/가격 오류 제보</div>
+                                <div class="custom-option" onclick="selectOption('학교 추가', 'topicSchool')" data-i18n="topicSchool">학교/식당 추가 요청</div>
+                                <div class="custom-option" onclick="selectOption('번역 오타', 'topicTypo')" data-i18n="topicTypo">번역/오타 제보</div>
+                                <div class="custom-option" onclick="selectOption('기타', 'topicEtc')" data-i18n="topicEtc">기타</div>
+                            </div>
+                        
+                            <input type="hidden" id="contactReason" value="">
+                            <input type="hidden" id="contactReasonKey" value="">
+                        </div>
+                        
+                        <textarea id="contactContent" class="setting-input" rows="8" placeholder="내용을 입력해주세요." data-i18n-placeholder="contactContentPlaceholder"></textarea>
+                        
+                        <button class="mini-confirm-btn" onclick="submitInquiry()" data-i18n="submitInquiryBtn">문의하기</button>
+                    </div>
+                </div>
+
+                <button class="setting-item exit-btn" onclick="quitApp()" data-i18n="quit">종료하기</button>
+            </div>
+        </div>
+
+        <div id="customModal" class="modal-overlay" style="display: none;">
+            <div class="modal-box">
+                <div class="modal-title" data-i18n="alertTitle">알림</div>
+                <div id="modalMessage" class="modal-content"></div>
+                <button class="mini-confirm-btn" onclick="closeModal()" data-i18n="confirmBtn">확인</button>
+            </div>
+        </div>
+
+        <script src="assets/js/constants.js"></script>
+        <script src="assets/js/settings.js"></script>
+    </body>
+</html>

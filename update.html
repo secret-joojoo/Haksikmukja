@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https: data:;">
+    <title>업데이트</title>
+    
+    <link rel="stylesheet" href="assets/css/theme.css">
+    <link rel="stylesheet" href="assets/css/settings.css">
+    <link rel="stylesheet" href="assets/css/update.css">
+</head>
+<body>
+    <div class="title-bar">
+        <span class="settings-title" data-i18n="updateTitle">학식묵자 업데이트</span>
+        <div class="close-text-btn" id="btn-close">✕</div>
+    </div>
+
+    <div class="content-wrapper">
+        
+        <div class="version-info-box">
+            <span class="version-label" id="title-text" data-i18n="updateHeader">새로운 버전이 출시되었습니다!</span>
+            <span class="version-tag" id="version-text">v1.0.1</span>
+        </div>
+
+        <div class="release-notes-container">
+            <span class="notes-label" data-i18n="releaseNotesLabel">패치 내역</span>
+            <div class="release-notes-box" id="notes-area">
+                로딩 중...
+            </div>
+        </div>
+
+        <div class="progress-wrapper" id="progress-cont">
+            <div class="progress-text" id="progress-status" data-i18n="msgDownloading">다운로드 중... 0%</div>
+            
+            <div class="progress-track">
+                <div class="progress-fill" id="prog-bar"></div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="mini-confirm-btn action-btn" id="btn-cancel" data-i18n="btnLater">나중에</button>
+            <button class="mini-confirm-btn action-btn btn-primary" id="btn-update" data-i18n="btnUpdate">업데이트</button>
+        </div>
+    </div>
+
+    <script src="assets/js/constants.js"></script>
+    <script src="assets/js/update.js"></script>
+</body>
+</html>

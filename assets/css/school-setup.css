@@ -1,0 +1,112 @@
+@import url('theme.css');
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    overflow: hidden;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+/* 🔴 [추가] 초기 모드일 때 (학교 선택 전) 강제 높이 지정 */
+body.initial-mode {
+    min-height: 295px !important;
+    display: flex;
+    flex-direction: column;
+}
+/* 🔴 [추가] 이때는 컨테이너도 꽉 차게 */
+body.initial-mode .container {
+    flex: 1;
+}
+
+.title-bar {
+    height: 50px;
+    background-color: var(--header-bg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    -webkit-app-region: drag;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.window-title {
+    font-weight: bold;
+    font-size: 15px;
+    color: var(--text-sub);
+}
+
+.close-btn {
+    cursor: pointer;
+    color: #888;
+    font-size: 18px;
+    -webkit-app-region: no-drag;
+}
+.close-btn:hover { color: var(--danger-color); }
+
+.container { padding: 15px; }
+
+.input-group { margin-bottom: 15px; position: relative; }
+
+.label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-bottom: 8px;
+}
+
+.search-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: var(--item-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-main);
+    outline: none;
+}
+.search-input:focus { border-color: var(--accent-color); }
+
+.suggestions-box {
+    width: 100%;
+    background-color: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    max-height: 150px;
+    overflow-y: auto;
+    display: none;
+    margin-top: 3px;
+    box-shadow: 0 4px 10px var(--shadow-color);
+}
+
+.suggestion-item {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-main);
+}
+.suggestion-item:hover { background-color: var(--item-hover-bg); }
+
+.cafeteria-section { display: none; flex-direction: column; }
+
+.chips-wrapper { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.chip {
+    padding: 8px 12px;
+    background-color: var(--chip-bg);
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    color: var(--text-main);
+    transition: all 0.2s;
+}
+.chip:hover { background-color: var(--item-hover-bg); }
+
+.chip.selected {
+    background-color: var(--accent-color);
+    color: #222;
+    font-weight: bold;
+}

@@ -1,0 +1,171 @@
+@import url('theme.css');
+
+/* viewer.css */
+
+body {
+    background-color: var(--bg-color); /* #222 -> 변수 변경 */
+    color: var(--text-main);           /* white -> 변수 변경 */
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* 스크롤바 방지 */
+    user-select: none; /* 텍스트 선택 방지 */
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* 1. 타이틀 바 */
+.title-bar {
+    height: 50px;
+    background-color: var(--header-bg); /* #2a2a2a -> 변수 변경 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px; /* 양옆 여백 살짝 줄임 */
+    border-bottom: 1px solid var(--border-color); /* #444 -> 변수 변경 */
+    box-sizing: border-box;
+    -webkit-app-region: drag; 
+}
+
+/* 2. 버튼들을 담는 컨테이너 (우측 정렬용) */
+.window-controls {
+    display: flex;
+    gap: 25px; 
+    -webkit-app-region: no-drag; /* 버튼 영역은 드래그 방지 */
+}
+
+/* 3. 공통 버튼 스타일 */
+.control-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: var(--text-sub); /* #888 -> 변수 변경 (테마에 맞게 회색톤 유지) */
+    font-size: 18px;      /* 아이콘 크기 */
+    transition: all 0.2s;
+}
+
+/* 4. 최대화 버튼 호버 (밝은 회색 배경) */
+.maximize-btn:hover {
+    background-color: var(--item-hover-bg); /* rgba(255,255,255,0.1) -> 변수 변경 */
+    color: var(--text-main);                /* white -> 변수 변경 */
+}
+
+/* 5. 닫기 버튼 호버 (빨간 배경) */
+.close-btn:hover {
+    color: var(--danger-color); /* #e81123 -> 변수 변경 */
+}
+
+/* 🔴 2. 타이틀 텍스트 */
+.window-title {
+    font-weight: bold;
+    font-size: 15px;
+    color: var(--text-sub); /* #ddd -> 변수 변경 */
+}
+
+/* 🔴 [수정] 조작법 가이드 */
+.control-guide {
+    position: absolute;
+    top: 70px;
+    left: 20px;
+    
+    color: var(--text-main); 
+    font-size: 13px;
+    font-weight: 400;
+    
+    /* 1. 기본값 (다크/네이비 테마용): 흰 글씨엔 '검은 그림자' */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+    
+    z-index: 10;
+    pointer-events: none;
+    transition: text-shadow 0.3s; /* 테마 바뀔 때 부드럽게 */
+}
+
+/* 🔴 [추가] 라이트/핑크 테마일 때만 그림자 반전! */
+/* body 태그에 data-theme="light" 또는 "pink"가 붙으면 작동 */
+body[data-theme='light'] .control-guide,
+body[data-theme='pink'] .control-guide {
+    /* 2. 밝은 테마용: 검은 글씨엔 '하얀 그림자' (글자 주변을 밝게 밝혀줌) */
+    text-shadow: 1px 1px 3px #ffffff;
+}
+
+/* 🔴 JPG 저장 버튼 스타일 */
+.save-btn {
+    position: absolute;
+    top: 70px;  /* 헤더(50px) + 여백 */
+    right: 20px; /* 오른쪽 여백 */
+    
+    background-color: var(--panel-bg); /* rgba(0,0,0,0.6) -> 테마 패널색 */
+    color: var(--text-main);           /* #fff -> 변수 변경 */
+    border: 1px solid var(--border-color); /* rgba(255,255,255,0.3) -> 변수 변경 */
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-family: 'Segoe UI', sans-serif;
+    cursor: pointer;
+    z-index: 20; /* 3D 캔버스보다 위에, 가이드보다도 확실히 위에 */
+    transition: all 0.2s;
+    
+    /* 텍스트 드래그 방지 */
+    user-select: none;
+    -webkit-app-region: no-drag;
+}
+
+.save-btn:hover {
+    background-color: var(--accent-color); /* #ff9f43 -> 포인트 컬러 변수 */
+    border-color: var(--accent-color);
+    color: #222; /* 글자는 잘 보이게 검정 */
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px var(--shadow-color);
+}
+
+.save-btn:active {
+    transform: translateY(1px);
+    filter: brightness(0.9); /* #e68a30 같은 하드코딩 대신 밝기 조절로 통일 */
+}
+
+/* 🔴 2D 뷰어 & 로딩 스타일 추가 */
+#canvas-container {
+    width: 100%;
+    height: calc(100vh - 50px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: transparent; 
+    cursor: grab;
+    position: relative; /* 로딩 텍스트 위치 잡기 위해 */
+}
+
+#canvas-container:active {
+    cursor: grabbing;
+}
+
+#targetImage {
+    /* 🔴 [수정] JS가 위치를 전적으로 제어하도록 설정 */
+    position: absolute; 
+    top: 0;
+    left: 0;
+    
+    /* 🔴 [핵심] 변환 기준점을 '왼쪽 상단'으로 고정해야 줌 계산이 정확해짐 */
+    transform-origin: 0 0;
+    
+    max-width: none; /* JS 초기화 시 크기 잡을 거라 제한 해제 (또는 상황에 맞춰 조정) */
+    
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transition: transform 0.05s ease-out;
+    will-change: transform;
+    display: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* 🔴 [추가] 로딩 인디케이터 스타일 */
+#loading-indicator {
+    position: absolute;
+    color: var(--text-sub); /* 테마의 보조 텍스트 색상 사용 */
+    font-size: 15px;
+    font-weight: 500;
+    display: none; /* 평소엔 숨김 */
+    z-index: 5; /* 이미지보다 아래, 배경보단 위 */
+    pointer-events: none; /* 클릭 방해 금지 */
+}

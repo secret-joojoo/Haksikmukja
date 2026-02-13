@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;">
+  <title>학교 설정</title>
+  <link rel="stylesheet" href="assets/css/school-setup.css">
+  <style>
+      body { overflow: hidden; }
+  </style>
+</head>
+<body>
+  <div class="title-bar">
+    <span class="window-title" data-i18n="windowTitle">학교 및 식당 설정</span>
+    <div class="close-btn" onclick="window.close()">✕</div>
+  </div>
+
+  <div class="container" id="mainContainer">
+    
+    <div class="input-group">
+      <span class="label" data-i18n="labelSearch">학교 검색</span>
+      <input type="text" id="schoolInput" class="search-input" placeholder="학교 이름을 입력하세요 (예: KAIST)" autocomplete="off">
+      <div id="suggestions" class="suggestions-box"></div>
+    </div>
+
+    <div id="cafeteriaSection" class="cafeteria-section">
+      <span class="label" data-i18n="labelCafeteria">식당 선택</span>
+      <div id="cafeteriaList" class="chips-wrapper"></div>
+    </div>
+
+  </div>
+
+  <script src="assets/js/constants.js"></script>
+  <script src="assets/js/school-setup.js"></script>
+</body>
+</html>

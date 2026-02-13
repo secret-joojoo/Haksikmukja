@@ -1,0 +1,143 @@
+/* settings.css를 베이스로 하되, 업데이트 창만의 레이아웃 잡기 */
+body {
+    /* settings.css의 body 스타일 상속됨 */
+    display: flex;
+    flex-direction: column;
+    min-height: fit-content;
+    margin: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    background-color: var(--bg-color);
+}
+
+/* 내용 영역 꽉 차게 */
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 0;
+}
+
+/* 버전 정보 표시 (설정 항목 스타일 응용) */
+.version-info-box {
+    background-color: var(--panel-bg);
+    padding: 10px 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--border-color);
+}
+
+.version-label {
+    color: var(--text-main);
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.version-tag {
+    background-color: var(--accent-color);
+    color: #222; /* 포인트 컬러 위엔 어두운 글씨가 국룰 */
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* 패치 내역 박스 (설정의 textarea 스타일인 .setting-input 활용 + 커스텀) */
+.release-notes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+.notes-label {
+    font-size: 13px;
+    color: var(--text-sub);
+    padding: 5px;
+}
+
+.release-notes-box {
+    /* settings.css의 .setting-input 스타일을 가져오되 읽기 전용 느낌 */
+    width: 100%;
+    height: auto;
+    min-height: 50px;
+    background-color: var(--item-bg);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 6px 15px 0px 15px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+    resize: none;
+    overflow-y: auto;
+    box-sizing: border-box;
+    white-space: pre-wrap; /* 줄바꿈 유지 */
+}
+
+/* 스크롤바 예쁘게 (크롬/일렉트론) */
+.release-notes-box::-webkit-scrollbar { width: 8px; }
+.release-notes-box::-webkit-scrollbar-thumb {
+    background-color: var(--border-color);
+    border-radius: 4px;
+}
+.release-notes-box::-webkit-scrollbar-track { background: transparent; }
+
+/* 프로그레스 바 (설정의 range slider 느낌 내기) */
+.progress-wrapper {
+    height: 30px; /* 공간 확보 */
+    display: none; /* 평소엔 숨김 */
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+}
+
+.progress-track {
+    width: 100%;
+    height: 6px;
+    background-color: #555; /* settings.css의 input[type=range] 배경색 */
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    width: 0%;
+    height: 100%;
+    background-color: var(--accent-color); /* 테마 포인트 컬러 */
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 12px;
+    color: var(--text-sub);
+    text-align: right;
+}
+
+/* 하단 버튼 그룹 */
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: auto;
+}
+
+/* 버튼 크기 살짝 조정 */
+.action-btn {
+    padding: 8px 20px;
+    font-size: 13px;
+}
+
+/* 업데이트 버튼 강조 (설정의 active 상태 활용) */
+.btn-primary {
+    background-color: var(--accent-color);
+    color: #222;
+    border-color: var(--accent-color);
+    font-weight: bold;
+}
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}

@@ -1,0 +1,86 @@
+@import url('theme.css');
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  overflow: hidden;
+  height: auto;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.title-bar {
+  height: 50px;
+  background-color: var(--header-bg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--text-sub);
+  padding: 0 20px;
+  -webkit-app-region: drag;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.close-btn {
+    cursor: pointer;
+    color: #888;
+    font-size: 18px;
+    transition: color 0.2s;
+    -webkit-app-region: no-drag;
+}
+.close-btn:hover { color: var(--danger-color); }
+
+.calendar-container {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 날짜 버튼 스타일 */
+.date-btn {
+  background-color: var(--item-bg);      /* 기존 #333 대체 */
+  border: 1px solid var(--border-color); /* 기존 #444 대체 */
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  transition: all 0.2s;
+  color: var(--text-main);               /* 기존 white 대체 */
+}
+
+.date-btn:hover {
+  background-color: var(--item-hover-bg); /* 기존 #444 대체 */
+  border-color: var(--border-color);
+  transform: translateX(2px); 
+}
+
+/* 오늘 날짜는 특별하게 강조 */
+.date-btn.today {
+  border-color: var(--accent-color);      /* 기존 오렌지색 대체 */
+  color: var(--text-main);
+  /* 기존의 반투명 오렌지 배경은 테마 색상과 충돌할 수 있어서, 
+     안전하게 '조금 더 밝은 배경(Hover색)'으로 통일했어. */
+  background-color: var(--item-hover-bg); 
+}
+
+.date-text { font-size: 13px; font-weight: bold; }
+.day-label { font-size: 12px; color: var(--text-sub); /* 기존 #888 대체 */ }
+
+/* 선택된 날짜 스타일 (가장 강하게 적용) */
+.date-btn.selected {
+  background-color: var(--accent-color) !important;
+  color: #222 !important;               /* 포인트 컬러 위엔 검은 글씨 */
+  border-color: var(--accent-color) !important;
+  font-weight: bold;
+  transform: scale(1.02);
+  /* 그림자 색도 테마에 맞춰서 자연스러운 그림자 색으로 변경 */
+  box-shadow: 0 0 10px var(--shadow-color);
+}

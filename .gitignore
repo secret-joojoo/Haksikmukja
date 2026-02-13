@@ -1,0 +1,23 @@
+# 1. 의존성 모듈
+node_modules/
+
+# 2. 빌드 결과물
+dist/
+out/
+build/
+
+# 3. 운영체제 쓰레기 파일 (맥, 윈도우)
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 4. 로그 파일들
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 5. 환경 변수 파일
+.env
+
+# 6. 앱의 개선사항 모음집
+private_record.txt

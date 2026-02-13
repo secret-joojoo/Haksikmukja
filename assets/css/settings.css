@@ -1,0 +1,293 @@
+@import url('theme.css');
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: 'Segoe UI', sans-serif;
+  padding: 0;
+  margin: 0;
+  user-select: none;
+  overflow: hidden;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.content-wrapper {
+  padding: 15px;
+}
+
+.title-bar {
+  height: 50px;
+  background-color: var(--header-bg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  
+  /* 드래그 가능 영역 */
+  -webkit-app-region: drag; 
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.3s;
+}
+
+.settings-title {
+  font-weight: bold;
+  font-size: 15px;
+  color: var(--text-sub);
+}
+
+/* 닫기 버튼 */
+.close-text-btn {
+  cursor: pointer;
+  color: #888;
+  font-size: 18px;
+  transition: color 0.2s;
+  -webkit-app-region: no-drag; 
+}
+.close-text-btn:hover { color: var(--danger-color); }
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 설정 항목 버튼 */
+.setting-item {
+  width: 100%;
+  background-color: var(--item-bg);
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: none;
+  color: var(--text-main);
+  text-align: left;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.setting-item:hover { 
+  background-color: var(--item-hover-bg); 
+}
+
+/* 설정 항목이 열려있을 때 */
+.setting-item.active {
+  background-color: var(--item-hover-bg);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.exit-btn { 
+  color: var(--danger-color);
+}
+
+/* 조절 패널 스타일 (언어, 폰트, 투명도, 테마 등) */
+.control-panel {
+  background-color: var(--panel-bg);
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* 슬라이더 라벨들 */
+.range-label {
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 5px;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text-sub);
+}
+.percent-text {
+  color: var(--accent-color);
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* 슬라이더(Range) 디자인 */
+input[type=range] {
+  width: 100%;
+  cursor: pointer;
+  accent-color: var(--accent-color);
+  height: 6px;
+  background: #555;
+  border-radius: 5px;
+  outline: none;
+}
+
+/* 미니 버튼 스타일 (언어, 폰트, 테마 선택 버튼) */
+.mini-confirm-btn {
+  width: 100%;
+  background-color: var(--item-hover-bg);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 6px 15px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mini-confirm-btn:hover {
+  background-color: var(--accent-color);
+  color: #222;
+  border-color: var(--accent-color);
+  transform: translateY(-1px);
+}
+
+/* 선택된 버튼 스타일 (활성화) */
+.mini-confirm-btn.active {
+  background-color: var(--accent-color);
+  color: #222222;
+  border-color: var(--accent-color);
+  font-weight: bold;
+  opacity: 1;
+}
+
+/* 입력창 스타일 */
+.setting-input {
+    width: 100%;
+    background-color: var(--item-bg); /* 배경색 테마 따라가게 */
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 10px;
+    font-family: inherit;
+    resize: none; /* 크기 조절 막기 */
+    outline: none;
+    box-sizing: border-box; /* 패딩 포함 크기 계산 */
+}
+.setting-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+/* ... (기존 CSS 맨 아래에 추가) */
+
+/* 🌑 모달 배경 (화면 전체를 덮는 반투명 막) */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* 뒤 배경 흐리게 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* 제일 위에 뜨도록 */
+    animation: fadeIn 0.2s ease-out;
+}
+
+/* 📦 모달 박스 디자인 */
+.modal-box {
+    background-color: var(--panel-bg); /* 테마 배경색 */
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    width: 80%;
+    max-width: 300px;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    animation: slideUp 0.2s ease-out;
+}
+
+/* 제목 스타일 */
+.modal-title {
+    font-weight: bold;
+    color: var(--accent-color); /* 포인트 컬러 */
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+/* 내용 텍스트 */
+.modal-content {
+    color: var(--text-main);
+    font-size: 14px;
+    line-height: 1.5;
+    word-break: keep-all; /* 단어 단위로 줄바꿈 */
+}
+
+/* 등장 애니메이션 (선택 사항인데 넣으면 고급스러움) */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* ... (기존 CSS 아래에 추가) ... */
+
+/* 🎨 커스텀 셀렉트 디자인 */
+.custom-select-wrapper {
+    position: relative;
+    width: 100%;
+    font-family: inherit;
+    margin-bottom: 0px; /* 아래 요소랑 간격 */
+}
+
+/* 1. 닫혀있을 때 보이는 박스 */
+.custom-select {
+    background-color: var(--item-bg);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 13px;
+    padding: 10px 12px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between; /* 텍스트랑 화살표 양끝 정렬 */
+    align-items: center;
+    transition: border-color 0.2s;
+}
+
+.custom-select:hover {
+    background-color: var(--item-hover-bg);
+}
+
+/* 2. 펼쳐진 옵션 목록 박스 */
+.custom-options {
+    position: absolute;
+    top: 105%; /* 살짝 아래에 배치 */
+    left: 0;
+    right: 0;
+    background-color: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-shadow: 0 4px 15px var(--shadow-color);
+    z-index: 100; /* 다른 요소보다 위에 뜨게 */
+    overflow: hidden;
+    animation: fadeIn 0.1s ease-out;
+}
+
+/* 3. 개별 옵션 항목 */
+.custom-option {
+    padding: 10px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--text-main);
+    transition: background 0.1s;
+}
+
+/* 🔴 [핵심] 마우스 올렸을 때 네가 설정한 테마 강조색(Accent) 적용! */
+.custom-option:hover {
+    background-color: var(--accent-color); /* 핑크, 네이비 등 테마 따라감 */
+    color: #fff; /* 글자는 잘 보이게 흰색으로 */
+}
+
+/* 화살표 애니메이션용 */
+.arrow {
+    font-size: 12px;
+    transition: transform 0.2s ease;
+}

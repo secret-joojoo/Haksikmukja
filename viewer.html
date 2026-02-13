@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;">
+    <title>메뉴 상세 뷰어</title>
+    <link rel="stylesheet" href="assets/css/viewer.css">
+  </head>
+  <body>
+
+    <div class="title-bar">
+      <span class="window-title" id="menuName" data-i18n="loading">메뉴 로딩 중..</span>
+      <div class="window-controls">
+          <div class="control-btn maximize-btn" onclick="toggleMaximize()">❒</div>
+          <div class="control-btn close-btn" onclick="window.close()">✕</div>
+      </div>
+    </div>
+
+    <div class="control-guide" data-i18n="guide">좌클릭 드래그: 이동  /  휠: 확대·축소  /  더블클릭: 초기화</div>
+    
+    <button class="save-btn" onclick="saveAsJpg()" data-i18n="btnSave">JPG 저장</button>
+
+    <div id="canvas-container" ondblclick="resetView()">
+        <div id="loading-indicator" data-i18n="msgLoading">이미지 불러오는 중..</div>
+        
+        <img id="targetImage" src="" alt="Food Image">
+    </div>
+
+    <script src="assets/js/constants.js"></script>
+    <script src="assets/js/viewer.js"></script>
+  </body>
+</html>

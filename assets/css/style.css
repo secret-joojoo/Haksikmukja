@@ -1,0 +1,195 @@
+@import url('theme.css');
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    font-family: 'Segoe UI', sans-serif;
+    color: var(--text-main);
+    overflow: hidden;
+    user-select: none;
+}
+
+/* 위젯 컨테이너 */
+.widget-container {
+    height: auto;
+    min-height: 100px;
+    background-color: var(--bg-color);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* 상단 바 (헤더) */
+.title-bar {
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+    background-color: var(--header-bg);
+    -webkit-app-region: drag; 
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    -webkit-app-region: no-drag;
+}
+
+.app-title {
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--text-main);
+}
+
+/* 아이콘 버튼 스타일 */
+.icon-btn {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    opacity: 1;
+    transition: opacity 0.2s, transform 0.2s, filter 0.2s;
+    filter: brightness(1.2); 
+}
+
+/* 라이트 모드일 때 아이콘 색상 반전 */
+[data-theme="light"] .icon-btn,
+[data-theme="pink"] .icon-btn {
+    filter: brightness(0.2); 
+}
+[data-theme="light"] .icon-btn:hover,
+[data-theme="pink"] .icon-btn:hover {
+    filter: brightness(0);
+}
+
+.icon-btn:hover {
+    opacity: 1;
+    transform: scale(1.2);
+    filter: brightness(1.5); 
+}
+
+.content {
+    padding: 18px;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    align-content: start;
+    max-height: var(--max-content-height, 500px);  /* 1. 이 높이를 넘어가면 더 이상 창이 커지지 않음 (원하는 픽셀로 조절해) */
+    overflow-y: auto;   /* 2. 내용이 max-height보다 길어지면 세로 스크롤바 생성을 허용함 */
+    overflow-x: hidden; /* 3. 가로 스크롤은 안 생기게 막음 */
+}
+
+/* 스크롤바 전체 너비 */
+.content::-webkit-scrollbar {
+    width: 8px;
+}
+/* 스크롤바 막대 (움직이는 부분) */
+.content::-webkit-scrollbar-thumb {
+    background-color: var(--border-color); /* 테마 변수 활용 */
+    border-radius: 4px;
+}
+/* 스크롤바 트랙 (배경) */
+.content::-webkit-scrollbar-track {
+    background-color: transparent; 
+}
+/* 마우스 올렸을 때 막대 색 진하게 */
+.content::-webkit-scrollbar-thumb:hover {
+    background-color: var(--accent-color);
+}
+
+/* 🔴 [복구] 제목 스타일 원상복구 (오렌지색 제거 -> 기본 텍스트 색상) */
+.content h2 {
+    grid-column: 1 / -1;
+    margin-bottom: 5px;
+    color: var(--text-main); /* 흰색(다크모드 기준)으로 복귀 */
+}
+
+h2 { 
+    margin-top: 0; 
+    font-size: 14px; 
+    border-bottom: 1px solid var(--border-color); 
+    padding-left: 5px;
+    padding-bottom: 15px;
+}
+
+/* 🔴 [복구] 메뉴 아이템 스타일 원상복구 (박스 제거, 패딩 원복) */
+.menu-item {
+    margin-bottom: 0; 
+    font-size: 14px; 
+    cursor: pointer; 
+    padding: 3px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    
+    background-color: transparent; /* 배경색 제거 (투명) */
+    color: var(--text-main);
+}
+
+.menu-item:last-child {
+    margin-bottom: 0;
+}
+
+.menu-item:hover {
+    background-color: var(--item-hover-bg); /* 호버했을 때만 살짝 배경 표시 */
+}
+
+.menu-title { 
+    color: var(--text-sub); 
+    font-size: 12px; 
+    margin-bottom: 3px; 
+}
+
+
+/* 툴팁 스타일 유지 */
+.icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  -webkit-app-region: no-drag; 
+}
+
+.icon-wrapper::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 150%;
+  left: 50%;
+  transform: translateX(-50%) translateY(5px);
+  background-color: rgba(0, 0, 0, 0.9);
+  color: #fff;       
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.icon-wrapper:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* 🔴 [추가] 데이터 없을 때 안내 문구 스타일 */
+.empty-state-msg {
+    padding: 8px 5px;       /* 위아래 여백 좀 줌 */
+    text-align: left;       /* 가운데 정렬 */
+    font-size: 13px;          /* 🔽 글자 크기 줄임 (원하는 대로 조절해!) */
+    color: var(--text-empty); /* ✨ 여기서 테마별 색상을 가져다 씀! */
+    font-weight: normal;      /* 너무 두껍지 않게 */
+}

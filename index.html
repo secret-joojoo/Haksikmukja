@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;">
+        <title>학식묵자</title>
+        <link rel="stylesheet" href="assets/css/style.css">
+    </head>
+    <body>
+        <div class="widget-container" id="widget">
+        
+            <div class="title-bar">
+                <div class="header-left">
+                    <img src="assets/icons/ic_title.png" class="icon-btn">
+                    <span class="app-title">학식묵자</span>
+                </div>
+
+                <div class="header-right">
+                    <div class="icon-wrapper" id="btnSchool" data-tooltip="학교 설정">
+                        <img src="assets/icons/ic_school.png" class="icon-btn" onclick="openSchoolSetup()">
+                    </div>
+                    <div class="icon-wrapper" id="btnCalendar" data-tooltip="캘린더">
+                        <img src="assets/icons/ic_calendar.png" class="icon-btn" onclick="openCalendar()">
+                    </div>
+                    <div class="icon-wrapper" id="btnSettings" data-tooltip="설정">
+                        <img src="assets/icons/ic_settings.png" class="icon-btn" onclick="openSettings()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <h2 id="menuTitle">오늘의 학식</h2>
+            </div>
+        
+        </div>
+
+        <script src="assets/js/constants.js"></script>
+        <script src="assets/js/index.js"></script>
+
+    </body>
+</html>

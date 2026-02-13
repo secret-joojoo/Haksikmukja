@@ -1,0 +1,56 @@
+{
+  "name": "haksikmukja",
+  "productName": "학식묵자",
+  "version": "1.0.1",
+  "description": "학식묵자~~",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dist": "electron-builder"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/secret-joojoo/Haksikmukja.git"
+  },
+  "build": {
+    "appId": "com.secretjoojoo.haksikmukja",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "secret-joojoo",
+        "repo": "Haksikmukja"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icons/ic_logo.ico",
+      "artifactName": "${productName} Setup ${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true
+    }
+  },
+  "keywords": [
+    "kaist",
+    "cafeteria",
+    "menu"
+  ],
+  "author": "secret-joojoo",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "electron": "^39.2.7",
+    "electron-builder": "^26.4.0"
+  },
+  "dependencies": {
+    "axios": "^1.13.2",
+    "electron-log": "^5.4.3",
+    "electron-store": "^8.1.0",
+    "electron-updater": "^6.7.3",
+    "three": "^0.182.0"
+  }
+}

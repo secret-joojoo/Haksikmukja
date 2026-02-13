@@ -1,0 +1,22 @@
+# 1. 가상환경 폴더 (절대 올리면 안 됨! 용량 크고 남의 컴퓨터에서 안 돌아감)
+venv/
+env/
+.env
+
+# 2. 파이썬 컴파일 파일 (찌꺼기)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 3. 데이터베이스 파일 (테스트 데이터나 실제 DB는 로컬에만 둬야 함)
+*.sqlite3
+*.db
+
+# 4. 로그 파일 및 디버그용 쓰레기
+*.log
+kaist_debug.html
+kaist_debug.txt
+
+# 5. OS 생성 파일 (맥/윈도우)
+.DS_Store
+Thumbs.db
