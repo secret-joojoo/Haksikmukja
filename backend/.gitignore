@@ -20,3 +20,6 @@ kaist_debug.txt
 # 5. OS 생성 파일 (맥/윈도우)
 .DS_Store
 Thumbs.db
+
+#6. 개인적인 파일
+private_record.txt

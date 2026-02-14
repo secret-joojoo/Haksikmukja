@@ -4,8 +4,7 @@
 
 > "오늘 학식 뭐 나오지?"
 
-**학식묵자**는 학교 홈페이지의 식단 정보를 크롤링하여 메뉴를 2D 이미지로 시각화하여 보여주는 데스크톱 위젯 애플리케이션입니다.
-FastAPI의 비동기 처리 성능과 Pydantic의 데이터 검증을 활용해 빠르고 안정적인 서비스를 제공합니다.
+**학식묵자**는 학교의 식단 정보를 크롤링하여 메뉴를 2D 이미지로 시각화하여 보여주는 데스크톱 위젯 애플리케이션입니다.
 
 ## 주요 기능 (Key Features)
 * **다양한 학교 및 식당 지원**: KAIST, 서울대 등 다양한 학교의 학식 정보를 제공합니다. 업데이트를 통해 지원하는 학교와 식당을 확장할 수 있습니다.
@@ -17,25 +16,26 @@ FastAPI의 비동기 처리 성능과 Pydantic의 데이터 검증을 활용해 
 ## 기술 스택 (Tech Stack)
 
 ### Frontend
-* **Electron**: 데스크톱 애플리케이션 프레임워크
-* **Node.js**: 런타임 환경
-* **Vanilla JS**: UI 로직 구현
-* **HTML** & **CSS**
+- **Desktop Framework**: Electron (Node.js + Chromium)
+- **Languages**: HTML5, CSS3, Vanilla JavaScript (ES6+)
+- **HTTP Client**: Axios
+- **Communication**: IPC (Inter-Process Communication) Main-Renderer Pattern
 
 ### Backend
-* **FastAPI**: 메인 웹 프레임워크
-* **Python**: 백엔드 언어
-* **PostgreSQL**: 메인 데이터베이스
-* **Google Gemini**: OCR(광학 문자 인식)
-* **pollinations.ai(flux model)**: 이미지 생성
+- **Framework**: FastAPI (Python 3.10+)
+- **Database**: SQLite (Async/aiosqlite), SQLAlchemy (ORM)
+- **Migration**: Alembic
+- **Scheduler**: APScheduler (AsyncIO)
+- **Deployment**: Fly.io
 
 ---
 
 ## 폴더 구조 (Project Structure)
 
 ```bash
-haksikmukja/
+Haksikmukja/
 ├── backend/                # 백엔드 서버 (FastAPI)
+│   ├── alembic/            # DB 마이그레이션 설정
 │   ├── app/
 │   │   ├── api/            # API 라우터 (Endpoints)
 │   │   ├── core/           # 설정 파일 (Config)
@@ -43,16 +43,18 @@ haksikmukja/
 │   │   ├── schemas/        # Pydantic 모델 (Request/Response)
 │   │   ├── services/       # 비즈니스 로직 (크롤러, AI, DB작업)
 │   │   └── main.py         # 앱 진입점 (Entry Point)
-│   └── requirements.txt    # 의존성 목록
-├── assets/                 # 프론트엔드 리소스 (CSS, Images, Icons)
+│   ├── requirements.txt    # 의존성 목록
+│   ├── alembic.ini         # Alembic 설정 파일
+│   └── Dockerfile          # 배포용 도커 설정
+├── assets/                 # 프론트엔드 리소스 (CSS, JS, Icons)
 ├── main.js                 # 프론트엔드 로직
+├── preload.js              # 
 ├── index.html              # 메인 페이지
 ├── school-setup.html       # 학교 설정 페이지
 ├── calendar.html           # 캘린더 페이지
 ├── settings.html           # 설정 페이지
-└── viewer.html             # 3D 뷰어 페이지
-
-
+├── viewer.html             # 3D 뷰어 페이지
+└── update.html             # 업데이트 알림 페이지
 ```
 
 ---
@@ -85,7 +87,6 @@ pip install -r requirements.txt
 
 ```env
 DATABASE_URL=YOUR_DATABASE_URL
-GEMINI_API_KEY=YOUR_GEMINI_KEY
 DISCORD_WEBHOOK_URL=YOUR_DISCORD_WEBHOOK_URL
 
 ```
@@ -112,39 +113,34 @@ npm start
 
 ---
 
-## 설치 경로
+## Frontend Updates
 
-* [exe 파일 (Google Drive)](https://drive.google.com/file/d/1EXwVR3oOxhZVwGUfMprxhtyIyBn8esBJ/view?usp=sharing)
+-None
 
 ---
 
-## Release Notes
+## Backend Updates
 
-### v1.0.1 (2026-02-12) - 리팩토링 및 보안 강화
+### v0.0.2
 
-**Security (보안)**
-* `nodeIntegration: true` 제거 및 `contextIsolation: true` 적용.
-* `remote` 모듈 의존성 제거.
-* **Preload Script 도입:** 메인 프로세스와 렌더러 프로세스 간의 통신을 `window.electronAPI`로 격리.
-* **CSP (Content Security Policy) 적용:** 모든 HTML 파일에 보안 메타 태그 추가.
+기존의 불안정했던 서버 구조를 대대적으로 리팩토링하여 안정성과 확장성을 확보했습니다.
 
-**Refactoring (구조 개선)**
-* **관심사의 분리 (SoC):** HTML 파일 내에 혼재되어 있던 JavaScript 로직을 `assets/js/` 폴더로 분리.
-* **상수 및 데이터 모듈화:** 번역 데이터(i18n), 학교 정보, 메뉴 타입 등을 `constants.js`로 통합 관리.
-* **렌더링 로직 개선:** 문자열 결합 방식에서 컴포넌트 단위 함수(`createMenuCard`) 활용 방식으로 변경.
-* **아이콘 이미지 폴더 정리**: `assets/images/`, `assets/icons/`의 아이콘들을 `assets/icons/` 경로로 통일.
-
-**Performance (성능)**
-* **Resize Observer 최적화:** 윈도우 크기 조절 로직에 **Debouncing(디바운싱)** 기법을 적용하여 불필요한 IPC 통신 최소화.
-
-**Fixes & Features (수정 및 기능)**
-* **자동 실행:** 앱T 최초 실행 시 윈도우 시작 프로그램 등록 로직 추가.
-* **UI 개선**: 학교 설정 창에서 검색된 학교 리스트에 따라 창 크기 변화.
+- **성능 최적화**: DB 조회 시 발생하던 N+1 문제를 `Eager Loading`으로 해결하여 쿼리 속도를 비약적으로 향상시켰습니다.
+- **비동기 스케줄러 도입**: 기존 `BackgroundScheduler`를 `AsyncIOScheduler`로 교체하여 FastAPI의 비동기 환경과 완벽하게 호환되도록 수정했습니다.
+- **데이터베이스 마이그레이션**: `Alembic`을 도입하여 체계적인 스키마 관리(Version Control)가 가능해졌습니다.
+- **경량화**: 불필요한 OCR 라이브러리(Tesseract, OpenCV 등)를 제거하여 Docker 이미지 크기와 리소스 점유율을 대폭 줄였습니다.
 
 ---
 
 ## 아이콘 저작권
+
 * <a href="https://www.flaticon.com/kr/free-icons/" title="학교 아이콘">학교 아이콘 제작자: Freepik - Flaticon</a>
 * <a href="https://www.flaticon.com/kr/free-icons/" title="캘린더 아이콘">캘린더 아이콘 제작자: Abdul-Aziz - Flaticon</a>
 * <a href="https://www.flaticon.com/kr/free-icons/" title="설정 아이콘">설정 아이콘 제작자: feen - Flaticon</a>
 * <a href="https://www.flaticon.com/kr/free-icons/" title="쌀 아이콘">쌀 아이콘 제작자: Vectors Market - Flaticon</a>
+
+---
+
+## 설치 경로
+
+* [exe 파일 (Google Drive)](https://drive.google.com/file/d/19qYztyvriFPndjkue1G2yOGwE7kNah4p/view?usp=drive_link)
