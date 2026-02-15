@@ -24,3 +24,7 @@ primary_region = 'nrt'
 [mounts]
   source = "haksikmukja_data"
   destination = "/data"
+
+[env]
+  PORT = "8080"
+  TZ = "Asia/Seoul"

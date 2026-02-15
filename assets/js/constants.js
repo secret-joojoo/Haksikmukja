@@ -6,11 +6,13 @@ window.CONSTANTS = {
     MENU_TYPE_MAP: {
         "BREAKFAST": { ko: "조식", en: "Breakfast" },
         "BREAKFAST_1000": { ko: "천원의 아침밥", en: "₩1000 Breakfast" },
+        "BREAKFAST_C": { ko: "조식 C코너", en: "Breakfast C" },
         "LUNCH": { ko: "중식", en: "Lunch" },
         "LUNCH_SPECIAL": { ko: "중식 일품", en: "Lunch Special" },
         "LUNCH_A": { ko: "중식 A코너", en: "Lunch A" },
         "LUNCH_B": { ko: "중식 B코너", en: "Lunch B" },
         "LUNCH_C": { ko: "중식 C코너", en: "Lunch C" },
+        "LUNCH_D": { ko: "중식 D코너", en: "Lunch D" },
         "LUNCH_SELF": { ko: "중식 셀프", en: "Lunch Self" },
         "LUNCH_ORDER": { ko: "중식 주문", en: "Lunch Order" },
         "LUNCH_BUFFET": { ko: "중식 뷔페", en: "Lunch Buffet" },
@@ -19,19 +21,24 @@ window.CONSTANTS = {
         "LUNCH_1F": { ko: "중식 1층", en: "Lunch 1F" },
         "LUNCH_2F": { ko: "중식 2층", en: "Lunch 2F" },
         "DINNER": { ko: "석식", en: "Dinner" },
+        "DINNER_C": { ko: "석식 C코너", en: "Dinner C" },
+        "DINNER_D": { ko: "석식 D코너", en: "Dinner D" },
         "DINNER_SELF": { ko: "석식 셀프", en: "Dinner Self" },
         "DINNER_ORDER": { ko: "석식 주문", en: "Dinner Order" },
         "DINNER_BUFFET": { ko: "석식 뷔페", en: "Dinner Buffet" },
         "DINNER_FACULTY": { ko: "석식 (교직원)", en: "Dinner (Faculty)" },
         "DINNER_TAKEOUT": { ko: "석식 Take-out", en: "Dinner Take-out" },
+        "PREMIUM_A": { ko: "고급식 A", en: "Premium A" },
+        "PREMIUM_B": { ko: "고급식 B", en: "Premium B" },
     },
 
     // 2. 학교 데이터
     SCHOOL_DB: [
-        { name: "KAIST", cafeterias: ["카이마루", "서맛골", "동맛골", "교수회관"] },
-        { name: "서울대학교", cafeterias: ["학생회관식당", "자하연식당 3층", "자하연식당 2층", "예술계식당", "두레미담", "동원관식당", "기숙사식당", "3식당", "302동식당", "301동식당"] },
-        { name: "이화여자대학교", cafeterias: ["I-House 학생식당", "진·선·미관 식당", "공대식당", "한우리집 식당", "E-House 식당(201동)"]},
-        { name: "충남대학교", cafeterias: ["제1학생회관", "제2학생회관", "제3학생회관", "제4학생회관", "생활과학대학"]}
+        { name: "KAIST", cafeterias: ["카이마루", "서맛골", "교수회관", "문지캠퍼스", "화암 기숙사식당"] },
+        // { name: "서울대학교", cafeterias: ["학생회관식당", "자하연식당 3층", "자하연식당 2층", "예술계식당", "두레미담", "동원관식당", "기숙사식당", "3식당", "302동식당", "301동식당"] },
+        // { name: "이화여자대학교", cafeterias: ["I-House 학생식당", "진·선·미관 식당", "공대식당", "한우리집 식당", "E-House 식당(201동)"]},
+        // { name: "충남대학교", cafeterias: ["제1학생회관", "제2학생회관", "제3학생회관", "제4학생회관", "생활과학대학"]},
+        { name: "서울시립대학교", cafeterias: ["학생회관 1층", "이룸라운지", "양식당", "자연과학관"] }
     ],
 
     // 3. 번역 데이터

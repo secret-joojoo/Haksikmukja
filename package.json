@@ -1,7 +1,7 @@
 {
   "name": "haksikmukja",
   "productName": "학식묵자",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "학식묵자~~",
   "main": "main.js",
   "scripts": {

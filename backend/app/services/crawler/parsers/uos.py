@@ -28,20 +28,23 @@ from app.services.crawler.scrapers import BaseScraper
 from app.schemas.crawler import SchoolData, CafeteriaData, MenuData
 
 # =============================================================================
-# 1. 카이스트 식당 공통 부모 클래스
+# 1. 서울시립대 공통 부모 클래스
 # =============================================================================
-class KaistCafeteriaBase:
-    def __init__(self, code: str, name: str):
-        self.code = code
+class UosCafeteriaBase:
+    def __init__(self, name: str, menuid: str, rstcde: str = None):
         self.name = name
-        self.base_url = "https://www.kaist.ac.kr/kr/html/campus/053001.html"
+        self.menuid = menuid
+        self.rstcde = rstcde 
+        self.base_url = "https://www.uos.ac.kr/food/placeList.do"
 
     async def fetch_html(self, target_date: date) -> Optional[str]:
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         }
-        formatted_date = target_date.strftime("%Y-%m-%d")
-        target_url = f"{self.base_url}?dvs_cd={self.code}&stt_dt={formatted_date}"
+        formatted_date = target_date.strftime("%Y%m%d")
+        target_url = f"{self.base_url}?search_date={formatted_date}&menuid={self.menuid}"
+        if self.rstcde:
+            target_url += f"&rstcde={self.rstcde}"
         
         try:
             async with httpx.AsyncClient(verify=False, headers=headers, timeout=10.0) as client:
@@ -55,22 +58,22 @@ class KaistCafeteriaBase:
             return None
 
     def _clean_menu_item(self, text: str) -> str:
-        """메뉴 이름 정리 및 잡다한 공지사항 제거"""
-        text = re.sub(r'[\[\(][0-9.,원\s]+[\]\)]', '', text) # 괄호 안의 정보 제거
-        text = text.replace('"', '').replace('★', '').strip()
+        """기본 정리 로직 (가격 삭제 포함)"""
+        text = re.sub(r'\([0-9,]+원\)', '', text)
+        text = text.replace('"', '').strip()
         
         ignore_keywords = [
-            "천원", "제공", "캠페인", "운영시간", "안녕하세요", 
-            "학생증", "간식", "참고", "감사합니다", "부탁", "소지", "kcal",
-            "원산지", "게시", "주간", "변경", "문의", "종료", "함께", "리더십", "미운영"
+            "kcal", "g/", "원산지", "돈육", "계육", "우육", "국내산", "호주산", "브라질산", 
+            "중국산", "식재료", "조달", "내부", "사정", "변동", "토핑", "코너", "운영시간",
+            "식단", "제공", "마감", "입장", "예약", "신청", "이메일", "접수", "회신", "인원"
         ]
         
-        if any(keyword in text for keyword in ignore_keywords):
-            return "" 
-        
-        if len(text) <= 1:
-            return ""
-            
+        if re.search(r'\d{1,2}:\d{2}~\d{1,2}:\d{2}', text): return ""
+        if "원" in text and re.search(r'[0-9,]', text): return "" 
+        if not re.search(r'[가-힣]', text): return "" 
+
+        if any(keyword in text for keyword in ignore_keywords): return "" 
+        if len(text) <= 1: return ""
         return text.strip()
 
     def _clean_text_lines(self, element) -> List[str]:
@@ -81,10 +84,9 @@ class KaistCafeteriaBase:
     async def parse(self, target_date: date) -> Optional[CafeteriaData]:
         html = await self.fetch_html(target_date)
         if not html: return None
-        
         soup = BeautifulSoup(html, 'html.parser')
         
-        table = soup.find("table", class_="table")
+        table = soup.find("table")
         if not table: return None
         tbody = table.find("tbody")
         if not tbody: return None
@@ -94,7 +96,6 @@ class KaistCafeteriaBase:
         if len(tds) < 3: return None
 
         menus = self._extract_menus(tds, target_date)
-        
         if menus:
             return CafeteriaData(name=self.name, menus=menus)
         return None
@@ -118,12 +119,11 @@ class KaistCafeteriaBase:
                     is_header = True
                     break
             
-            if is_header:
-                continue
+            if is_header: continue
 
             if current_category:
                 cleaned = self._clean_menu_item(line)
-                if cleaned and "원" not in cleaned:
+                if cleaned:
                     current_items.append(cleaned)
 
         if current_category and current_items:
@@ -136,98 +136,107 @@ class KaistCafeteriaBase:
 # 2. 식당별 구현체
 # =============================================================================
 
-class KaimaruParser(KaistCafeteriaBase):
+class StudentHall1Parser(UosCafeteriaBase):
     def __init__(self):
-        super().__init__("fclt", "카이마루")
+        super().__init__("학생회관 1층", "2000005006002000000")
 
     def _extract_menus(self, tds, target_date: date) -> List[MenuData]:
         menus = []
-        menus.extend(self._parse_column(self._clean_text_lines(tds[0]), target_date, {"조식": "BREAKFAST"}))
-        menus.extend(self._parse_column(self._clean_text_lines(tds[1]), target_date, {
-            "자율배식": "LUNCH", "A코너": "LUNCH_A", "B코너": "LUNCH_B"
-        }))
-        menus.extend(self._parse_column(self._clean_text_lines(tds[2]), target_date, {"석식": "DINNER"}))
+        menus.extend(self._parse_column(self._clean_text_lines(tds[0]), target_date, {"C코너": "BREAKFAST_C"}))
+        menus.extend(self._parse_column(self._clean_text_lines(tds[1]), target_date, {"A코너": "LUNCH_A", "C코너": "LUNCH_C", "D코너": "LUNCH_D"}))
+        menus.extend(self._parse_column(self._clean_text_lines(tds[2]), target_date, {"C코너": "DINNER_C", "D코너": "DINNER_D"}))
         return menus
 
-class WestParser(KaistCafeteriaBase):
+class IrumLoungeParser(UosCafeteriaBase):
     def __init__(self):
-        super().__init__("west", "서맛골")
+        super().__init__("이룸라운지", "2000005006002000000", rstcde="010")
 
     def _extract_menus(self, tds, target_date: date) -> List[MenuData]:
         menus = []
-        menus.extend(self._parse_column(self._clean_text_lines(tds[0]), target_date, {}, default_category="BREAKFAST"))
-        menus.extend(self._parse_column(self._clean_text_lines(tds[1]), target_date, {"일품": "LUNCH_SPECIAL"}, default_category="LUNCH"))
-        menus.extend(self._parse_column(self._clean_text_lines(tds[2]), target_date, {"일품": "DINNER_SPECIAL"}, default_category="DINNER"))
+        menus.extend(self._parse_column(self._clean_text_lines(tds[1]), target_date, {"일반식": "LUNCH", "고급식A": "PREMIUM_A", "고급식B": "PREMIUM_B"}))
+        menus.extend(self._parse_column(self._clean_text_lines(tds[2]), target_date, {"일반식": "DINNER", "고급식A": "IGNORE", "고급식B": "IGNORE"}))
         return menus
 
-class EmpParser(KaistCafeteriaBase):
+class WesternRestaurantParser(UosCafeteriaBase):
     def __init__(self):
-        super().__init__("emp", "교수회관")
-
-    def _extract_menus(self, tds, target_date: date) -> List[MenuData]:
-        menus = []
-        menus.extend(self._parse_column(self._clean_text_lines(tds[0]), target_date, {}, default_category="BREAKFAST"))
-        menus.extend(self._parse_column(self._clean_text_lines(tds[1]), target_date, {"1층 자율배식": "LUNCH_1F", "2층 자율배식": "LUNCH_2F"}))
-        menus.extend(self._parse_column(self._clean_text_lines(tds[2]), target_date, {"자율배식": "DINNER"}))
-        return menus
-
-class MunjiParser(KaistCafeteriaBase):
-    def __init__(self):
-        super().__init__("icc", "문지캠퍼스")
+        super().__init__("양식당", "2000005006002000000", rstcde="030")
 
     def _clean_menu_item(self, text: str) -> str:
-        text = super()._clean_menu_item(text)
-        # 문지 특유의 꼬리 숫자 제거 (예: "찌개5,6,10")
-        text = re.sub(r'\d+(?:,\d+)*$', '', text).strip()
-        return text
+        """양식당 전용 (가격 보존)"""
+        text = text.replace('"', '').strip()
+        
+        ignore_keywords = [
+            "kcal", "g/", "원산지", "돈육", "계육", "우육", "국내산", "호주산", "브라질산", 
+            "중국산", "식재료", "조달", "내부", "사정", "변동", "토핑", "코너", "운영시간",
+            "식단", "제공", "마감", "입장", "예약", "신청", "이메일", "접수", "회신", "인원",
+            "면류", "밥류", "조정", "간격"
+        ]
+        
+        if re.search(r'\d{1,2}:\d{2}~\d{1,2}:\d{2}', text): return ""
+        if re.match(r'^\([가-힣]+\)$', text): return "" # (양식류) 같은 헤더 제거
+
+        # 한글 없고 가격도 없으면 삭제 (순수 영어 메뉴명)
+        if not re.search(r'[가-힣]', text):
+            if not ("원" in text and re.search(r'[0-9,]', text)):
+                return ""
+
+        if any(keyword in text for keyword in ignore_keywords): return "" 
+        if len(text) <= 1: return ""
+        return text.strip()
 
     def _extract_menus(self, tds, target_date: date) -> List[MenuData]:
         menus = []
-        menus.extend(self._parse_column(self._clean_text_lines(tds[0]), target_date, {}, default_category="BREAKFAST"))
         menus.extend(self._parse_column(self._clean_text_lines(tds[1]), target_date, {}, default_category="LUNCH"))
-        menus.extend(self._parse_column(self._clean_text_lines(tds[2]), target_date, {}, default_category="DINNER"))
         return menus
 
-class HwaamParser(KaistCafeteriaBase):
+class NaturalScienceHallParser(UosCafeteriaBase):
     def __init__(self):
-        # URL 파라미터가 dvs_cd=hawam 임
-        super().__init__("hawam", "화암 기숙사 식당")
-
-    def _clean_menu_item(self, text: str) -> str:
-        text = super()._clean_menu_item(text)
-        # 화암도 문지처럼 꼬리 숫자(알레르기 정보)가 붙어 나옴
-        text = re.sub(r'\d+(?:,\d+)*$', '', text).strip()
-        return text
+        # 자연과학관: rstcde=040
+        super().__init__("자연과학관", "2000005006002000000", rstcde="040")
 
     def _extract_menus(self, tds, target_date: date) -> List[MenuData]:
         menus = []
-        # 조식, 중식, 석식 순서대로 파싱 (별도 헤더 없음)
-        menus.extend(self._parse_column(self._clean_text_lines(tds[0]), target_date, {}, default_category="BREAKFAST"))
-        menus.extend(self._parse_column(self._clean_text_lines(tds[1]), target_date, {}, default_category="LUNCH"))
-        menus.extend(self._parse_column(self._clean_text_lines(tds[2]), target_date, {}, default_category="DINNER"))
+        
+        # td[0]: 조식 정보 칸이지만 메뉴 없음 (운영시간 텍스트만 있음) -> 무시
+        
+        # [1] 중식 (tds[1]) - 기본 LUNCH
+        menus.extend(self._parse_column(
+            self._clean_text_lines(tds[1]), 
+            target_date, 
+            {}, 
+            default_category="LUNCH"
+        ))
+
+        # [2] 석식 (tds[2]) - 기본 DINNER
+        menus.extend(self._parse_column(
+            self._clean_text_lines(tds[2]), 
+            target_date, 
+            {}, 
+            default_category="DINNER"
+        ))
+
         return menus
 
 
 # =============================================================================
 # 3. 메인 스크래퍼
 # =============================================================================
-class KaistScraper(BaseScraper):
+class UosScraper(BaseScraper):
     def __init__(self):
         super().__init__(
-            school_name="KAIST",
-            school_region="대전",
+            school_name="서울시립대학교",
+            school_region="서울",
             url=""
         )
         self.parsers = [
-            KaimaruParser(),
-            WestParser(),
-            EmpParser(),
-            MunjiParser(),
-            HwaamParser(), # 화암 추가 완료
+            StudentHall1Parser(),
+            IrumLoungeParser(),
+            WesternRestaurantParser(),
+            NaturalScienceHallParser(), # 자연과학관 추가
         ]
 
     async def parse(self, target_date: date) -> Optional[SchoolData]:
-        print(f"⚡ KAIST 전체 식당 파싱 시작 ({target_date})")
+        print(f"⚡ 서울시립대 파싱 시작 ({target_date})")
         
         all_cafeterias = []
 

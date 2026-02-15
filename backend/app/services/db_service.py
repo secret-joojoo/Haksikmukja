@@ -63,3 +63,24 @@ async def save_school_data(session: AsyncSession, data: SchoolData):
     # 최종 저장
     await session.commit()
     print(f"✅ {data.school_name} 데이터 저장 완료!")
+
+async def delete_old_menus(db: AsyncSession, days: int = 3):
+    """
+    기준 일수(days)보다 오래된 메뉴 데이터를 삭제합니다.
+    기본값: 3일
+    """
+    # 1. 기준 날짜 계산 (오늘 - 3일)
+    cutoff_date = (datetime.now() - timedelta(days=days)).date()
+    
+    print(f"🧹 [청소] {cutoff_date} 이전의 오래된 메뉴를 삭제합니다...")
+
+    # 2. 삭제 쿼리 실행
+    # "Menu.date < cutoff_date" 인 녀석들만 골라서 삭제
+    result = await db.execute(delete(Menu).where(Menu.date < cutoff_date))
+    
+    # 3. 변경사항 저장
+    await db.commit()
+    
+    deleted_count = result.rowcount
+    print(f"✨ [청소 완료] 총 {deleted_count}개의 유통기한 지난 메뉴가 삭제되었습니다.")
+    return deleted_count

@@ -13,6 +13,10 @@ from app.db.models import Base
 from app.api.v1.endpoints import menus, inquiry
 from app.services.auto_filler import AutoFiller
 
+from app.db.init_data import initialize_school_data
+
+from app.services.db_service import delete_old_menus
+
 # 1. 스케줄러 인스턴스 생성 (AsyncIO 전용!)
 scheduler = AsyncIOScheduler()
 
@@ -30,6 +34,15 @@ async def scheduled_crawling_job():
     except Exception as e:
         print(f"❌ [스케줄러] 실행 중 에러 발생: {e}")
 
+async def scheduled_cleanup_job():
+    print("🧹 [스케줄러] DB 청소 시작 (오래된 데이터 삭제)")
+    try:
+        async with AsyncSessionLocal() as session:
+            # 3일 지난 메뉴 삭제
+            await delete_old_menus(session, days=3)
+    except Exception as e:
+        print(f"❌ [스케줄러] 청소 중 에러 발생: {e}")
+
 # 2. 수명 주기(Lifespan) 정의
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -37,6 +50,9 @@ async def lifespan(app: FastAPI):
     # async with engine.begin() as conn:
     #     await conn.run_sync(Base.metadata.create_all)
     # print("✅ DB 테이블 체크 완료")
+
+    async with AsyncSessionLocal() as session:
+        await initialize_school_data(session)
 
     # (2) 스케줄러 설정 및 시작
     # 매일 00:01분에 실행
@@ -46,6 +62,14 @@ async def lifespan(app: FastAPI):
         id="daily_crawling",
         replace_existing=True
     )
+
+    scheduler.add_job(
+        scheduled_cleanup_job,
+        CronTrigger(hour=0, minute=31, timezone=timezone('Asia/Seoul')),
+        id="daily_cleanup",
+        replace_existing=True
+    )
+
     scheduler.start()
     print("🚀 [시스템] 비동기 스케줄러 가동됨 (매일 00:01 실행)")
 
@@ -62,7 +86,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="학식 요정 백엔드",
     description="너를 위한 3D 학식 알리미 API 서버",
-    version="0.2.0", # 버전 업!
+    version="0.0.3", # 버전 업!
     lifespan=lifespan
 )
 
