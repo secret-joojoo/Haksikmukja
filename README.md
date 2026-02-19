@@ -64,6 +64,12 @@ Haksikmukja/
 - **KAIST 식당 업데이트**: 동맛골 제거 & 문지캠퍼스 및 화암 기숙사식당 추가
 - **서울시립대학교 추가**: 학생회관 1층, 이룸라운지, 양식당, 자연과학관 추가
 
+### v1.0.3
+
+- **KAIST 서맛골 개선**: 석식 일품이 '석식 일품', 'DINNER SPECIAL'로 표기되도록 개선.
+- **서울시립대학교 이룸라운지 개선**: '플러스 메뉴'를 파싱하도록 개선.
+- **서울시립대학교 양식당 개선**: 메뉴명과 가격이 혼재된 텍스트에서 '메뉴명: 가격' 형태로 깔끔하게 매핑.
+
 ---
 
 ## Backend Updates
@@ -83,11 +89,18 @@ Haksikmukja/
 - **Garbage Collection**: 매일 새벽 00:31, 3일 이상 지난 메뉴 데이터를 자동 삭제하도록 스케줄러 등록.
 - **시간대 조정**: 서버 타임존을 Asia/Seoul로 명시하여 크롤링 스케줄 정확도 향상.
 
+### v0.0.4 (Release: v1.0.3)
+
+- **서울시립대학교 크롤링 로직 개편**: 기존 GET 방식에서 날짜 데이터가 갱신되지 않던 문제를 해결하기 위해 `httpx`를 사용한 POST 요청으로 변경.
+- **DB 서비스 로직 수정**: 오래된 메뉴 삭제(`delete_old_menus`) 기능 실행 시 발생하던 `datetime` 모듈 누락 에러를 수정.
+- **문의 알림 개선**: 디스코드 채널로 전송되는 알림 메시지의 가독성 향상.
+- **의존성 정리**: `requirements.txt` 내 중복 패키지(`google-generativeai`) 제거 및 배포 환경 최적화.
+
 ---
 
 ## 설치
 
-* [exe 파일 (Google Drive)](https://drive.google.com/file/d/1EoiuJNj9uiDp1P3xrrii71rXE1YDT775/view?usp=sharing)
+* [exe 파일 (Google Drive)](https://drive.google.com/file/d/1TqfPOjAFoQzQY1nl7IsjsGm_lVwe_iqy/view?usp=sharing)
 
 ---
 

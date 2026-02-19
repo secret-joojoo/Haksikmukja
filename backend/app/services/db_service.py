@@ -1,6 +1,8 @@
 import re
+from datetime import datetime, timedelta  # [수정] 누락된 datetime 모듈 추가
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy import delete  # [수정] 누락된 delete 함수 추가
 from app.db import models
 from app.schemas.crawler import SchoolData
 
@@ -30,14 +32,13 @@ async def save_school_data(session: AsyncSession, data: SchoolData):
             await session.flush()
 
         # 3. 메뉴 저장 (덮어쓰기 로직)
-        # 3. 메뉴 저장 로직 수정
         for menu_data in caf_data.menus:
             
             # [전처리] 
-            # 1. 알레르기 정보 제거: "두부계란국(1,5)" -> "두부계란국"
+            # 1. 알레르기 정보 제거
             cleaned_items = [re.sub(r'\([0-9.,]+\)', '', item).strip() for item in menu_data.menu_items]
             
-            # 2. 리스트를 줄바꿈 문자로 합치기: ["밥", "국"] -> "밥\n국"
+            # 2. 리스트를 줄바꿈 문자로 합치기
             final_menu_text = "\n".join(cleaned_items)
 
             # 해당 날짜, 해당 식사(점심/저녁)에 이미 메뉴가 있는지 확인
@@ -50,13 +51,13 @@ async def save_school_data(session: AsyncSession, data: SchoolData):
             existing_menu = result.scalars().first()
 
             if existing_menu:
-                existing_menu.menu_text = final_menu_text # 합친 문자열 저장
+                existing_menu.menu_text = final_menu_text # 업데이트
             else:
                 new_menu = models.Menu(
                     cafeteria_id=cafeteria.id,
                     date=menu_data.date,
                     meal_type=menu_data.meal_type,
-                    menu_text=final_menu_text # 합친 문자열 저장
+                    menu_text=final_menu_text # 신규 생성
                 )
                 session.add(new_menu)
     
@@ -75,8 +76,8 @@ async def delete_old_menus(db: AsyncSession, days: int = 3):
     print(f"🧹 [청소] {cutoff_date} 이전의 오래된 메뉴를 삭제합니다...")
 
     # 2. 삭제 쿼리 실행
-    # "Menu.date < cutoff_date" 인 녀석들만 골라서 삭제
-    result = await db.execute(delete(Menu).where(Menu.date < cutoff_date))
+    # [수정] models.Menu로 명시적 접근
+    result = await db.execute(delete(models.Menu).where(models.Menu.date < cutoff_date))
     
     # 3. 변경사항 저장
     await db.commit()

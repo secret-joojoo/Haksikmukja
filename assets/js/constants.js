@@ -20,7 +20,9 @@ window.CONSTANTS = {
         "LUNCH_TAKEOUT": { ko: "중식 Take-out", en: "Lunch Take-out" },
         "LUNCH_1F": { ko: "중식 1층", en: "Lunch 1F" },
         "LUNCH_2F": { ko: "중식 2층", en: "Lunch 2F" },
+        "LUNCH_PLUS": { ko: "중식 플러스 메뉴", en: "LUNCH PLUS"},
         "DINNER": { ko: "석식", en: "Dinner" },
+        "DINNER_SPECIAL": {ko: "석식 일품", en: "Dinner Special"},
         "DINNER_C": { ko: "석식 C코너", en: "Dinner C" },
         "DINNER_D": { ko: "석식 D코너", en: "Dinner D" },
         "DINNER_SELF": { ko: "석식 셀프", en: "Dinner Self" },
@@ -28,6 +30,7 @@ window.CONSTANTS = {
         "DINNER_BUFFET": { ko: "석식 뷔페", en: "Dinner Buffet" },
         "DINNER_FACULTY": { ko: "석식 (교직원)", en: "Dinner (Faculty)" },
         "DINNER_TAKEOUT": { ko: "석식 Take-out", en: "Dinner Take-out" },
+        "DINNER_PLUS": { ko: "석식 플러스 메뉴", en: "DINNER PLUS"},
         "PREMIUM_A": { ko: "고급식 A", en: "Premium A" },
         "PREMIUM_B": { ko: "고급식 B", en: "Premium B" },
     },
@@ -35,9 +38,9 @@ window.CONSTANTS = {
     // 2. 학교 데이터
     SCHOOL_DB: [
         { name: "KAIST", cafeterias: ["카이마루", "서맛골", "교수회관", "문지캠퍼스", "화암 기숙사식당"] },
-        // { name: "서울대학교", cafeterias: ["학생회관식당", "자하연식당 3층", "자하연식당 2층", "예술계식당", "두레미담", "동원관식당", "기숙사식당", "3식당", "302동식당", "301동식당"] },
-        // { name: "이화여자대학교", cafeterias: ["I-House 학생식당", "진·선·미관 식당", "공대식당", "한우리집 식당", "E-House 식당(201동)"]},
-        // { name: "충남대학교", cafeterias: ["제1학생회관", "제2학생회관", "제3학생회관", "제4학생회관", "생활과학대학"]},
+        { name: "서울대학교", cafeterias: ["학생회관식당", "자하연식당 3층", "자하연식당 2층", "예술계식당", "두레미담", "동원관식당", "기숙사식당", "3식당", "302동식당", "301동식당"] },
+        { name: "이화여자대학교", cafeterias: ["I-House 학생식당", "진·선·미관 식당", "공대식당", "한우리집 식당", "E-House 식당(201동)"]},
+        { name: "충남대학교", cafeterias: ["제1학생회관", "제2학생회관", "제3학생회관", "제4학생회관", "생활과학대학"]},
         { name: "서울시립대학교", cafeterias: ["학생회관 1층", "이룸라운지", "양식당", "자연과학관"] }
     ],
 

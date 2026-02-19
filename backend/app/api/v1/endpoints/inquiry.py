@@ -22,7 +22,7 @@ async def create_inquiry(inquiry: InquiryCreate, db: AsyncSession = Depends(get_
     if settings.DISCORD_WEBHOOK_URL:
         async with httpx.AsyncClient() as client:
             payload = {
-                "content": f"📢 **[학식묵자] 새로운 문의 접수!**\n\n**분류**: {inquiry.category}\n**내용**: {inquiry.content}"
+                "content": f"📢 **[학식묵자] 새로운 문의 접수!**\n\n**주제**: {inquiry.category}\n**내용**: {inquiry.content}"
             }
             try:
                 await client.post(settings.DISCORD_WEBHOOK_URL, json=payload)

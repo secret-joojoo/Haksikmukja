@@ -33,15 +33,15 @@ class BaseScraper:
 
 def get_scrapers() -> List[BaseScraper]:
     from app.services.crawler.parsers.kaist import KaistScraper
-    # from app.services.crawler.parsers.snu import SnuScraper
-    # from app.services.crawler.parsers.ewha import EwhaScraper
-    # from app.services.crawler.parsers.cnu import CnuScraper
+    from app.services.crawler.parsers.snu import SnuScraper
+    from app.services.crawler.parsers.ewha import EwhaScraper
+    from app.services.crawler.parsers.cnu import CnuScraper
     from app.services.crawler.parsers.uos import UosScraper
 
     return [
         KaistScraper(),
-        # SnuScraper(),
-        # EwhaScraper(),      
-        # CnuScraper(),
+        SnuScraper(),
+        EwhaScraper(),      
+        CnuScraper(),
         UosScraper()
     ]

@@ -11,7 +11,7 @@ if "sqlite" in settings.DATABASE_URL:
 # 2. 엔진 생성
 engine = create_async_engine(
     settings.DATABASE_URL,
-    echo=True, # 로그 보기
+    echo=False, # 로그 보기
     connect_args=connect_args
 )
 
