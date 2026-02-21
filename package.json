@@ -26,7 +26,6 @@
       "**/*",
       "!.git/**/*",
       "!backend/**/*",
-      "!node_modules/**/*",
       "!.gitignore",
       "!private_record.txt",
       "!README.md"

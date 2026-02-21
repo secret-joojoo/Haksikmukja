@@ -96,11 +96,15 @@ Haksikmukja/
 - **문의 알림 개선**: 디스코드 채널로 전송되는 알림 메시지의 가독성 향상.
 - **의존성 정리**: `requirements.txt` 내 중복 패키지(`google-generativeai`) 제거 및 배포 환경 최적화.
 
+### v0.0.5 (Release: v1.0.3)
+
+- **스케줄러(APScheduler) 실행 안정성 강화**: 크롤링 및 DB 청소 작업의 `misfire_grace_time`을 60초로 설정하여 미세한 서버 딜레이가 발생하더라도 작업이 무시되지 않고 안정적으로 백그라운드 크롤링이 수행되도록 개선.
+
 ---
 
 ## 설치
 
-* [exe 파일 (Google Drive)](https://drive.google.com/file/d/1TqfPOjAFoQzQY1nl7IsjsGm_lVwe_iqy/view?usp=sharing)
+* [exe 파일 (Google Drive)](https://drive.google.com/file/d/1FpfIuGwwcKIE-po7YXzldy1HCL2OXdT_/view?usp=sharing)
 
 ---
 

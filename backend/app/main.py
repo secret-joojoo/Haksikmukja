@@ -60,14 +60,16 @@ async def lifespan(app: FastAPI):
         scheduled_crawling_job, 
         CronTrigger(hour=0, minute=1, timezone=timezone('Asia/Seoul')),
         id="daily_crawling",
-        replace_existing=True
+        replace_existing=True,
+        misfire_grace_time=60
     )
 
     scheduler.add_job(
         scheduled_cleanup_job,
         CronTrigger(hour=0, minute=31, timezone=timezone('Asia/Seoul')),
         id="daily_cleanup",
-        replace_existing=True
+        replace_existing=True,
+        misfire_grace_time=60
     )
 
     scheduler.start()
